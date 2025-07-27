@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PetShop</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./style/index.css" />
+  </head>
+  <body>
+    <div id="logo">
+      <img src="./assets/logo.svg" alt="" />
+    </div>
+
+    <main class="container">
+      <header class="header">
+        <h1>Sua Agenda</h1>
+        <p>
+          Aqui você pode ver todos os clientes e serviços agendados para hoje.
+        </p>
+
+        <input
+          type="date"
+          id="date schedule"
+          name="date schedule"
+          value="2023-10-01"
+        />
+      </header>
+
+      <section id="morning">
+        <div>
+          <img src="./assets/icons/Sun.svg" alt="" />
+          <h2>Manhã</h2>
+        </div>
+
+        <span>09h-12h</span>''
+        <ul role="list">
+          <li class="title">
+            <span>09:00</span>
+            <span
+              >Thor
+              <small> / Fernanda Costa</small>
+            </span>
+            <p>Vacinação</p>
+            <button id="remove-button">Remover agendamento</button>
+          </li>
+        </ul>
+      </section>
+
+      <section id="afternoon">
+        <div>
+          <img src="./assets/icons/Cloud-sun.svg" alt="" />
+          <h2>Manhã</h2>
+        </div>
+
+        <span>09h-12h</span>''
+        <ul role="list">
+          <li class="title">
+            <span>09:00</span>
+            <span
+              >Thor
+              <small> / Fernanda Costa</small>
+            </span>
+            <p>Vacinação</p>
+            <button id="remove-button">Remover agendamento</button>
+          </li>
+        </ul>
+      </section>
+
+      <section id="night">
+        <div>
+          <img src="./assets/icons/Moon-Stars.svg" alt="" />
+          <h2>Manhã</h2>
+        </div>
+
+        <span>09h-12h</span>''
+        <ul role="list">
+          <li class="title">
+            <span>09:00</span>
+            <span
+              >Thor
+              <small> / Fernanda Costa</small>
+            </span>
+            <p>Vacinação</p>
+            <button id="remove-button">Remover agendamento</button>
+          </li>
+        </ul>
+      </section>
+
+      <button id="open-modal">Novo Agendamento</button>
+
+      <div id="modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Agende um Atendimento</h2>
+            <p>Preencha os dados do cliente para realizar o agendamento:</p>
+          </div>
+          <form id="form-schedule">
+            <label for="Tutor">Nome do Tutor</label>
+            <input type="text" id="Tutor" name="Tutor" required />
+
+            <label for="pet">Nome do Pet</label>
+            <input type="text" id="pet" name="pet" required />
+
+            <label for="phone">Telefone</label>
+            <input type="text" id="Tel" name="Tel" required />
+
+            <label for="description"></label>
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              cols="50"
+              placeholder="Descrição do serviço"
+            ></textarea>
+
+            <label for="date">Data</label>
+            <input type="date" id="data" name="data" required />
+
+            <label for="hour">Hora</label>
+            <input type="time" id="hora" name="hora" required />
+
+            <button>AGENDAR</button>
+          </form>
+          <button id="close-modal">Fechar</button>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

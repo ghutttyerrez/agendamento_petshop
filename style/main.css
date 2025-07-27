@@ -1,0 +1,21 @@
+main {
+  .header {
+    & h1 {
+      font: var(--title);
+      color: var(--content-primary);
+      margin-block: 1.25rem 0.25rem;
+    }
+
+    & p {
+      color: var(--content-secondary);
+      font: var(--pg-md);
+      margin-block: 0.25rem 0;
+    }
+  }
+}
+
+@media (width >= 80em) {
+  .container {
+    --max-width: 55rem;
+  }
+}
