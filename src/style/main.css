@@ -1,0 +1,201 @@
+main {
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    & h1 {
+      font: var(--title);
+      color: var(--content-primary);
+      margin-block: 1.25rem 0.25rem;
+    }
+
+    & p {
+      color: var(--content-secondary);
+      font: var(--pg-md);
+      margin-block: 0.25rem 0;
+    }
+
+    & input[type="date"] {
+      all: unset;
+      font: var(--label-lg);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      position: relative;
+      margin: 0.75rem 0 2rem 0;
+      border: 1px solid var(--border-primary);
+      padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+      border-radius: 0.5rem;
+      color: var(--content-secondary);
+
+      &::-webkit-calendar-picker-indicator {
+        opacity: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        background: url("../../src/assets/Calendar.svg") center/contain;
+        width: 1.25rem;
+        height: 1.25rem;
+        left: 0.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--content-secondary);
+        pointer-events: none;
+      }
+    }
+  }
+
+  section + section {
+    margin: 0.875rem 0 0 0;
+  }
+
+  #morning,
+  #afternoon,
+  #night {
+    & .content {
+      width: 100%;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+      padding: 1.25rem 1.25rem;
+    }
+
+    & .content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-divisor);
+
+      & > div:first-child {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      & .hour {
+        color: var(--content-secondary);
+        font: var(--label-lg);
+      }
+    }
+
+    & h2 {
+      font: var(--label-lg);
+      color: var(--content-primary);
+      margin: 0;
+    }
+
+    & span {
+      font: var(--label-md);
+      color: var(--content-primary);
+
+      & small {
+        font: var(--pg-md);
+        color: var(--content-secondary);
+      }
+    }
+
+    & ul[role="list"] {
+      margin-block: 0.5rem;
+      padding-inline-start: 0;
+
+      & p {
+        font: var(--pg-md);
+        color: var(--content-secondary);
+      }
+    }
+
+    & li {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      padding-block: 0.5rem;
+      gap: 0.75rem;
+    }
+
+    & button[id="remove-button"] {
+      all: unset;
+      font: var(--pg-sm);
+      width: 100%;
+      height: auto;
+      color: var(--content-tertiary);
+      cursor: pointer;
+      display: flex;
+      justify-content: end;
+
+      &:hover {
+        color: var(--content-primary);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-tertiary);
+  width: 24.375rem;
+  height: 5rem;
+  margin-top: 3rem;
+  margin-inline: auto;
+}
+
+& button[id="open-modal"] {
+  all: unset;
+  display: flex;
+  text-transform: uppercase;
+  justify-content: center;
+  align-items: center;
+  font: var(--label-lg);
+  color: #050505;
+  background: var(--brand);
+  box-shadow: 0 0 20px 5px rgba(146, 130, 250, 0.3);
+  border-radius: 0.5rem;
+  width: 13.625rem;
+  height: 3rem;
+
+  &:hover {
+    background: var(--bg-highlights);
+  }
+}
+
+@media (width >= 80em) {
+  .container {
+    --max-width: 55rem;
+  }
+
+  #morning,
+  #afternoon,
+  #night {
+    & ul[role="list"] {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      align-items: center;
+    }
+  }
+
+  .button-container {
+    background: var(--bg-primary);
+    display: flex;
+
+    justify-content: end;
+    width: 95%;
+    margin-top: 0;
+  }
+}
