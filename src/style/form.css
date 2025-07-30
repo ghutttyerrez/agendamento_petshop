@@ -204,6 +204,7 @@
   & .btn {
     margin-bottom: 2rem;
     padding-bottom: 2rem;
+    cursor: pointer;
   }
 
   & button[id="schedule-btn"] {

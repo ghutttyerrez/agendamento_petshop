@@ -11,12 +11,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
-
-    <link rel="stylesheet" href="./style/index.css" />
   <script defer src="index.js"></script></head>
   <body>
     <div id="logo">
-      <img src="./assets/logo.svg" alt="" />
+      <img src="./src/assets/logo.svg" alt="" />
     </div>
 
     <main class="container">
@@ -26,15 +24,10 @@
           Aqui você pode ver todos os clientes e serviços agendados para hoje.
         </p>
 
-        <input
-          type="date"
-          id="date-schedule"
-          name="date schedule"
-          value="2023-10-01"
-        />
+        <input type="date" id="date" name="date" />
       </header>
 
-      <section id="morning">
+      <section id="morning" class="schedule">
         <div class="content">
           <div class="content-header">
             <div>
@@ -57,7 +50,7 @@
         </div>
       </section>
 
-      <section id="afternoon">
+      <section id="afternoon" class="schedule">
         <div class="content">
           <div class="content-header">
             <div>
@@ -80,7 +73,7 @@
         </div>
       </section>
 
-      <section id="night">
+      <section id="night" class="schedule">
         <div class="content">
           <div class="content-header">
             <div>
@@ -108,10 +101,10 @@
       <button id="open-modal">Novo Agendamento</button>
     </div>
 
-    <form id="form-schedule">
+    <form method="post" class="hidden" id="form-schedule">
       <div class="modal-content container" id="modal">
         <div>
-          <img src="./src/assets/Close.svg" alt="" />
+          <img id="closeButton" src="./src/assets/Close.svg" alt="" />
         </div>
         <div class="modal-header">
           <h2>Agende um Atendimento</h2>
@@ -127,16 +120,11 @@
         <label for="phone">Telefone</label>
         <input type="text" id="phone" name="Tel" required />
 
-        <label for="description">Descrição do Serviço</label>
-        <textarea
-          id="description"
-          name="description"
-          rows="4"
-          cols="50"
-        ></textarea>
+        <label for="service">Descrição do Serviço</label>
+        <textarea id="service" name="service" rows="4" cols="50"></textarea>
 
         <label for="date">Data</label>
-        <input type="date" id="data" name="data" required />
+        <input type="date" id="date" name="date" required />
 
         <label for="hour">Hora</label>
         <input type="time" id="hour" name="hora" required />

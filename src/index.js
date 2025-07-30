@@ -7,3 +7,8 @@ import "./libs/day.js";
 import "./style/global.css";
 import "./style/main.css";
 import "./style/form.css";
+
+//importando o js
+import "./modules/form-display.js";
+import "./modules/form/form-submit.js";
+import "./modules/page-load.js";
