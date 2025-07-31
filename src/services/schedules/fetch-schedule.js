@@ -10,7 +10,7 @@ export async function fetchSchedule(date) {
     const date = await response.json();
    
     //filtrando os agendamentos pela data
-    const schedulesDaily = date.filter(schedule => dayjs(date).isSame(schedule.when, "day"))
+    const schedulesDaily = date.filter(schedule => dayjs(date).isSame(schedule.time, "day"))
 
     //limpando a lista de agendamentos
     document.getElementById("morning") = "";

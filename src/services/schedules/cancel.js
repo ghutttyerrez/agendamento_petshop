@@ -5,9 +5,6 @@ export async function cancel({ id }) {
     //fazendo a requisição para cancelar o agendamento
     await fetch(`${apiConfig.baseUrl}/schedules/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
   } catch (error) {
     console.error("Erro ao cancelar agendamento:", error);
