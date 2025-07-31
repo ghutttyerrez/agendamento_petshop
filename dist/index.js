@@ -223,7 +223,7 @@ eval("{module.exports = __webpack_require__.p + \"b587ac78059fe8fbb3d0.svg\";\n\
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _libs_day_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/day.js */ \"./src/libs/day.js\");\n/* harmony import */ var _style_global_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style/global.css */ \"./src/style/global.css\");\n/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style/main.css */ \"./src/style/main.css\");\n/* harmony import */ var _style_form_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style/form.css */ \"./src/style/form.css\");\nObject(function webpackMissingModule() { var e = new Error(\"Cannot find module './modules/form-display.js'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());\nObject(function webpackMissingModule() { var e = new Error(\"Cannot find module './modules/form/form-submit.js'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());\nObject(function webpackMissingModule() { var e = new Error(\"Cannot find module './modules/page-load.js'\"); e.code = 'MODULE_NOT_FOUND'; throw e; }());\n\n\n//importando o dayjs\n\n\n//importando o css\n\n\n\n\n//importando o js\n\n\n\n\n//# sourceURL=webpack://agendamento_petshop/./src/index.js?\n}");
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _libs_day_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./libs/day.js */ \"./src/libs/day.js\");\n/* harmony import */ var _style_global_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./style/global.css */ \"./src/style/global.css\");\n/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style/main.css */ \"./src/style/main.css\");\n/* harmony import */ var _style_form_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style/form.css */ \"./src/style/form.css\");\n/* harmony import */ var _modules_form_submit_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/form/submit.js */ \"./src/modules/form/submit.js\");\n/* harmony import */ var _modules_load_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/load.js */ \"./src/modules/load.js\");\n\n\n//importando o dayjs\n\n\n//importando o css\n\n\n\n\n//importando o js\n\n\n\n//# sourceURL=webpack://agendamento_petshop/./src/index.js?\n}");
 
 /***/ }),
 
@@ -235,6 +235,28 @@ eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _li
 
 "use strict";
 eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ \"./node_modules/dayjs/dayjs.min.js\");\n/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var dayjs_locale_pt_br__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! dayjs/locale/pt-br */ \"./node_modules/dayjs/locale/pt-br.js\");\n/* harmony import */ var dayjs_locale_pt_br__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(dayjs_locale_pt_br__WEBPACK_IMPORTED_MODULE_1__);\n\n\ndayjs__WEBPACK_IMPORTED_MODULE_0___default().locale(\"pt-br\");\n\n//# sourceURL=webpack://agendamento_petshop/./src/libs/day.js?\n}");
+
+/***/ }),
+
+/***/ "./src/modules/form/submit.js":
+/*!************************************!*\
+  !*** ./src/modules/form/submit.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   loadCurrentDate: () => (/* binding */ loadCurrentDate)\n/* harmony export */ });\n/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dayjs */ \"./node_modules/dayjs/dayjs.min.js\");\n/* harmony import */ var dayjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(dayjs__WEBPACK_IMPORTED_MODULE_0__);\n\nvar form = document.querySelector(\"form\");\n\n//função que carrega a data atual no campo de data e coloca como mínimo a data atual\nfunction loadCurrentDate() {\n  var selectAllDate = document.querySelectorAll(\"input[type='date']\");\n  var currentDate = dayjs__WEBPACK_IMPORTED_MODULE_0___default()(new Date()).format(\"YYYY-MM-DD\");\n  selectAllDate.forEach(function (input) {\n    input.value = currentDate;\n    input.min = currentDate;\n  });\n}\nform.onsubmit = function (event) {\n  event.preventDefault();\n};\n\n//# sourceURL=webpack://agendamento_petshop/./src/modules/form/submit.js?\n}");
+
+/***/ }),
+
+/***/ "./src/modules/load.js":
+/*!*****************************!*\
+  !*** ./src/modules/load.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _form_submit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./form/submit */ \"./src/modules/form/submit.js\");\n\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n  (0,_form_submit__WEBPACK_IMPORTED_MODULE_0__.loadCurrentDate)();\n});\n\n//# sourceURL=webpack://agendamento_petshop/./src/modules/load.js?\n}");
 
 /***/ }),
 
