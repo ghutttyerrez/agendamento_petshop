@@ -27,7 +27,7 @@
         <input type="date" id="date" name="date" />
       </header>
 
-      <section id="morning" class="schedule">
+      <section id="morning" class="period">
         <div class="content">
           <div class="content-header">
             <div>
@@ -50,7 +50,7 @@
         </div>
       </section>
 
-      <section id="afternoon" class="schedule">
+      <section id="afternoon" class="period">
         <div class="content">
           <div class="content-header">
             <div>
@@ -73,7 +73,7 @@
         </div>
       </section>
 
-      <section id="night" class="schedule">
+      <section id="night" class="period">
         <div class="content">
           <div class="content-header">
             <div>
@@ -111,14 +111,14 @@
           <p>Preencha os dados do cliente para realizar o agendamento:</p>
         </div>
 
-        <label for="Tutor">Nome do Tutor</label>
-        <input type="text" id="Tutor" name="Tutor" required />
+        <label for="tutor">Nome do Tutor</label>
+        <input type="text" id="tutor" name="tutor" required />
 
         <label for="pet">Nome do Pet</label>
         <input type="text" id="pet" name="pet" required />
 
         <label for="phone">Telefone</label>
-        <input type="text" id="phone" name="Tel" required />
+        <input type="text" id="phone" name="phone" required maxlength="15" />
 
         <label for="service">Descrição do Serviço</label>
         <textarea id="service" name="service" rows="4" cols="50"></textarea>

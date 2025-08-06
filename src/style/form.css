@@ -68,7 +68,7 @@
     }
   }
 
-  & input[id="Tutor"] {
+  & input[id="tutor"] {
     background-image: url(../../src/assets/User--Streamline.svg);
     background-repeat: no-repeat;
     background-position: 0.5rem center;

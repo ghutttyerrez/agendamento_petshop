@@ -149,13 +149,14 @@ main {
   justify-content: center;
   align-items: center;
   background: var(--bg-tertiary);
-  width: 24.375rem;
+  width: 23.4375rem;
   height: 5rem;
   margin-top: 3rem;
   margin-inline: auto;
+  border-radius: 0.5rem;
 }
 
-& button[id="open-modal"] {
+& button[id="new-schedule"] {
   all: unset;
   display: flex;
   text-transform: uppercase;

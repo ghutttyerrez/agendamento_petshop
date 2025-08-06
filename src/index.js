@@ -10,4 +10,3 @@ import "./style/form.css";
 
 //importando o js
 import "./modules/form/submit.js";
-import "./modules/load.js";

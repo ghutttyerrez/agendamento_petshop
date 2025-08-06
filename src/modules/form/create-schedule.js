@@ -1,105 +1,60 @@
 import dayjs from "dayjs";
-import { cancel } from "../../services/schedules/cancel.js";
+import { cancelSchedule } from "../../services/schedule/cancel.js";
 
-// Função principal para criar um novo agendamento na interface
-export function createSchedule({ schedule }) {
-  // Selecionando elementos do DOM necessários para manipulação
-  const form = document.querySelector("form");
-  const scheduleForm = document.querySelector(".schedule");
-  const buttonNewSchedule = document.getElementById("new-schedule");
-  const serviceSchedule = document.getElementById("service");
+export function createSchedule(schedule) {
+  console.log("Criando agendamento:", schedule);
 
-  // Selecionando as seções de período (manhã, tarde, noite)
-  const morning = document.getElementById("morning");
-  const afternoon = document.getElementById("afternoon");
-  const night = document.getElementById("night");
+  // Extrai a hora do agendamento
+  const hour = dayjs(schedule.dateTime).format("HH:mm");
+  const scheduleHour = parseInt(hour.split(":")[0], 10);
 
-  // Objeto para facilitar acesso aos períodos
-  const periods = { morning, afternoon, night };
-
-  // Formatando dados do agendamento
-  const time = dayjs(schedule.time).format("HH:mm");
-  const pet = schedule.pet;
-  const owner = schedule.owner;
-  const service = schedule.service || serviceSchedule.value;
-
-  // Determinando em qual período (manhã/tarde/noite) o agendamento deve aparecer
-  const periodSection = getPeriodList(time, periods);
-
-  const ul = getOrCreateUl(periodSection);
-
-  const li = createScheduleItem(time, pet, owner, service, schedule);
-
-  ul.appendChild(li);
-
-  // Atualizando a interface - removendo blur e ocultando formulário
-  scheduleForm.classList.remove("blur");
-  form.classList.remove("form");
-  form.classList.add("hidden");
-  buttonNewSchedule.classList.remove("hidden");
-}
-
-// Função que cria a ul caso não exista na seção
-function getOrCreateUl(sectionElement) {
-  let ul = sectionElement.querySelector("ul");
-
-  // Se não encontrar, cria uma nova ul
-  if (!ul) {
-    ul = document.createElement("ul");
-    ul.setAttribute("role", "list");
-    sectionElement.querySelector(".content").appendChild(ul);
+  // Determina o período do dia
+  let period;
+  if (scheduleHour >= 6 && scheduleHour < 12) {
+    period = "morning";
+  } else if (scheduleHour >= 12 && scheduleHour < 18) {
+    period = "afternoon";
+  } else {
+    period = "night";
   }
 
-  return ul;
-}
+  console.log(`Agendamento para o período: ${period} às ${hour}`);
 
-// Função para criar o item completo do agendamento (li)
-function createScheduleItem(time, pet, owner, service, schedule) {
-  const li = document.createElement("li");
-  li.classList.add("title");
-  li.setAttribute("role", "listitem");
+  // CORREÇÃO: Seleciona o elemento específico do período por ID
+  const periodElement = document.getElementById(period);
 
-  // Preenchendo conteúdo HTML do agendamento
-  li.innerHTML = `
-    <span>${time}</span>
-    <span>${pet} <small>/ ${owner}</small></span>
-    <p>${service}</p>
+  if (!periodElement) {
+    console.error(`Elemento com ID "${period}" não encontrado`);
+    console.log("Elementos disponíveis:", document.querySelectorAll('[id]'));
+    return;
+  }
+
+  // Cria o elemento do agendamento
+  const scheduleItem = document.createElement("ul");
+  scheduleItem.setAttribute("data-id", schedule.id);
+  scheduleItem.setAttribute("role", "list");
+
+  scheduleItem.innerHTML = `
+    <li class="title">
+      <span>${hour}</span>
+      <span>${schedule.pet}<small> / ${schedule.tutor}</small></span>
+    </li>
+    <p>${schedule.service}</p>
+    <button class="remove-button" data-id="${schedule.id}">Remover agendamento</button>
   `;
 
-  // Criando e adicionando botão de remoção
-  const removeButton = createRemoveButton(schedule, li);
-  li.appendChild(removeButton);
+  // CORREÇÃO: Adiciona o agendamento ao período correto
+  periodElement.appendChild(scheduleItem);
 
-  return li;
-}
-
-// Função para criar botão de remoção do agendamento
-function createRemoveButton(schedule, li) {
-  const button = document.createElement("button");
-  button.id = "remove-button";
-  button.textContent = "Remover agendamento";
-
-  // Evento para cancelar agendamento quando botão for clicado
-  button.addEventListener("click", async (event) => {
-    event.preventDefault();
-    await cancel(schedule.id); // Chama serviço para cancelar no backend
-    li.remove(); // Remove da interface
+  // CORREÇÃO: Corrige o evento de remoção
+  const removeButton = scheduleItem.querySelector(".remove-button");
+  removeButton.addEventListener("click", () => {
+    console.log("Removendo agendamento com id:", schedule.id);
+    scheduleItem.remove();
+    
+    // Chama a função de cancelamento na API
+    cancelSchedule(schedule.id);
   });
 
-  return button;
-}
-
-// Função que determina em qual período o agendamento deve ser exibido
-function getPeriodList(time, { morning, afternoon, night }) {
-  // Extrai a hora do horário formatado
-  const hour = dayjs(time, "HH:mm").hour();
-
-  // Define período baseado na hora
-  if (hour >= 8 && hour < 12) {
-    return morning; // Manhã: 8h às 11h59
-  } else if (hour >= 12 && hour < 18) {
-    return afternoon; // Tarde: 12h às 17h59
-  } else {
-    return night; // Noite: 18h às 7h59
-  }
+  console.log("Agendamento criado com sucesso:", scheduleItem);
 }
