@@ -1,82 +1,66 @@
 export function formIn() {
-  // Elementos baseados na sua estrutura HTML
-  const buttonContainer = document.getElementById("button-container");
   const form = document.getElementById("form-schedule");
-  const main = document.querySelector("main.container");
-  const closeButton = document.getElementById("close-modal");
+  const openModalBtn = document.getElementById("new-schedule");
+  const closeModalBtn = document.getElementById("closeButton");
+  const closeModalBtnBottom = document.getElementById("close-modal");
 
-  // Elementos do formulário baseados no submit.js
-  const tutorName = document.getElementById("tutor");
-  const petName = document.getElementById("pet");
-  const phone = document.getElementById("phone");
-  const serviceDescription = document.getElementById("service");
-  const inputDate = document.querySelector("input[type='date']");
-  const hour = document.getElementById("hour");
+  // Função para abrir modal
+  function openModal() {
+    form.classList.remove("none");
 
-  // Cria o botão de "Novo Agendamento" se não existir
-  if (buttonContainer && !buttonContainer.querySelector("#new-schedule-btn")) {
-    const newScheduleBtn = document.createElement("button");
-    newScheduleBtn.id = "new-schedule-btn";
-    newScheduleBtn.textContent = "Novo Agendamento";
-    newScheduleBtn.className = "new-schedule-button";
-    buttonContainer.appendChild(newScheduleBtn);
+    // Previne scroll do body quando modal está aberto
+    document.body.style.overflow = "hidden";
 
-    // Evento para abrir o formulário
-    newScheduleBtn.addEventListener("click", () => {
-      console.log("Abrindo formulário de agendamento");
-
-      // Remove a classe hidden do formulário
-      form.classList.remove("hidden");
-
-      // Adiciona blur no fundo
-      if (main) {
-        main.classList.add("blur-bg");
-      }
-
-      // Esconde o botão de novo agendamento
-      newScheduleBtn.style.display = "none";
-
-      // Define a data atual como padrão
-      if (inputDate) {
-        const today = new Date().toISOString().split("T")[0];
-        inputDate.value = today;
-      }
-    });
+    // Define a data atual como padrão
+    const inputDate = document.querySelector(
+      "#form-schedule input[name='date']"
+    );
+    if (inputDate) {
+      const today = new Date().toISOString().split("T")[0];
+      inputDate.value = today;
+    }
+    // Acessibilidade: marca como dialog e foca no primeiro campo
+    form.setAttribute("role", "dialog");
+    form.setAttribute("aria-modal", "true");
+    const firstInput = form.querySelector("input, textarea, select, button");
+    firstInput?.focus();
   }
 
-  // Evento para fechar o formulário
-  if (closeButton) {
-    closeButton.addEventListener("click", () => {
-      console.log("Fechando formulário de agendamento");
+  // Função para fechar modal
+  function closeModal() {
+    form.classList.add("none");
 
-      // Adiciona a classe hidden no formulário
-      form.classList.add("hidden");
+    // Restaura scroll do body
+    document.body.style.overflow = "";
 
-      // Remove blur do fundo
-      if (main) {
-        main.classList.remove("blur-bg");
-      }
-
-      // Mostra o botão de novo agendamento
-      const newScheduleBtn = document.getElementById("new-schedule-btn");
-      if (newScheduleBtn) {
-        newScheduleBtn.style.display = "block";
-      }
-
-      // Reseta o formulário
-      if (form) {
-        form.reset();
-      }
-
-      // Limpa campos individualmente (backup)
-      if (tutorName) tutorName.value = "";
-      if (petName) petName.value = "";
-      if (phone) phone.value = "";
-      if (serviceDescription) serviceDescription.value = "";
-      if (inputDate) inputDate.value = "";
-      if (hour) hour.value = "";
-    });
+    // Limpar formulário
+    form.reset();
+    form.removeAttribute("role");
+    form.removeAttribute("aria-modal");
   }
+
+  // Event listeners
+  openModalBtn?.addEventListener("click", openModal);
+  closeModalBtn?.addEventListener("click", closeModal);
+  closeModalBtnBottom?.addEventListener("click", closeModal);
+
+  // Fechar modal ao clicar fora dele (no backdrop)
+  form?.addEventListener("click", (event) => {
+    if (event.target === form) {
+      closeModal();
+    }
+  });
+
+  // Fechar modal com ESC
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !form.classList.contains("none")) {
+      closeModal();
+    }
+  });
+
+  // Exportar funções para uso em outros módulos
+  window.openModal = openModal;
+  window.closeModal = closeModal;
 }
 
 // Inicializa quando o DOM estiver carregado

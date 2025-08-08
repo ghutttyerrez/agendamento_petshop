@@ -1,251 +1,310 @@
+/* Overlay para o formulário */
+#form-schedule {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
+  backdrop-filter: blur(8px); /* Blur no fundo */
+  z-index: 1000; /* Fica acima de tudo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
 #modal {
   display: flex;
   flex-direction: column;
   width: 100%;
-  justify-content: start;
-  width: var(--max-width);
+  max-width: 28rem; /* largura padrão mais confortável */
   background: var(--bg-tertiary);
   border-radius: 0.5rem;
-  margin-top: 1rem;
+  margin: 0; /* Remove margin-top */
+  max-height: 90vh; /* Limite de altura */
+  overflow-y: auto; /* Scroll se necessário */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Sombra bonita */
+  /* Oculta barras de rolagem visualmente */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge legado */
+}
 
-  & div {
-    display: flex;
-    justify-content: end;
-    width: 98%;
-    margin-top: 0.5rem;
+#modal::-webkit-scrollbar { /* Chrome/Safari/Edge */
+  width: 0;
+  height: 0;
+}
 
-    img {
-      width: 2.25rem;
-      height: 2.25rem;
-    }
+/* Barra do botão fechar (ícone X) no topo do modal */
+#modal > div:first-child {
+  display: flex;
+  justify-content: end;
+  width: 98%;
+  margin-top: 0.5rem;
+}
+
+#modal > div:first-child img {
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+#modal > div:first-child img:hover {
+  opacity: 0.7;
+}
+
+/* Cabeçalho do modal */
+#modal .modal-header {
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+#modal .modal-header h2 {
+  font: var(--title);
+  color: var(--content-primary);
+  padding-inline: 1.25rem;
+}
+
+#modal .modal-header p {
+  font: var(--pg-md);
+  color: var(--content-secondary);
+  padding-inline: 1.25rem;
+}
+
+/* Labels */
+#modal label {
+  font: var(--label-md);
+  color: var(--content-primary);
+  padding-inline: 1.25rem;
+  gap: 0.875rem;
+}
+
+/* Inputs base (texto/tel/email/number/etc) */
+#modal input {
+  all: unset;
+  display: block;
+  font: var(--label-lg);
+  color: var(--content-secondary);
+  width: calc(100% - 2.5rem);
+  margin-inline: 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-primary);
+  min-height: 3rem; /* permite crescer com padding */
+  border-radius: 0.25rem;
+  padding: 0.625rem 0.75rem; /* altura confortável */
+  box-sizing: border-box;
+}
+
+#modal input:hover {
+  border-color: var(--border-secondary);
+}
+
+#modal input:focus {
+  border-color: var(--brand);
+  outline: none;
+}
+
+/* Inputs com ícones à esquerda */
+#modal input#tutor,
+#modal input#pet,
+#modal input#phone {
+  padding-left: 2.5rem;
+}
+
+#modal input#tutor {
+  background-image: url("../assets/User--Streamline.svg");
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+}
+
+#modal input#pet {
+  background-image: url("../assets/Pet-Paw.svg");
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+}
+
+#modal input#phone {
+  background-image: url("../assets/Phone.svg");
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+}
+
+/* Textarea */
+#modal textarea {
+  all: unset;
+  display: block;
+  font: var(--label-lg);
+  color: var(--content-secondary);
+  width: calc(100% - 2.5rem);
+  margin-inline: 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-primary);
+  min-height: 5rem;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+#modal textarea:hover {
+  border-color: var(--border-secondary);
+}
+
+#modal textarea:focus {
+  border-color: var(--brand);
+  outline: none;
+}
+
+/* Date (com ícone) */
+#modal input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  background-image: url("../assets/Calendar.svg");
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+}
+
+#modal input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#modal input[type="date"]::-webkit-inner-spin-button,
+#modal input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Time (com ícone) */
+#modal input#hour {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  background-image: url("../assets/Clock-Circle.svg");
+  background-repeat: no-repeat;
+  background-position: 0.5rem center;
+  background-size: 1.25rem;
+  min-height: 3rem;
+  padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+}
+
+#modal input#hour::-webkit-time-picker-indicator {
+  opacity: 0; /* oculta visualmente o indicador nativo */
+}
+
+#modal input#hour::-webkit-calendar-picker-indicator {
+  opacity: 0; /* oculta visualmente */
+  position: absolute;
+  left: 0; /* move a área clicável para a esquerda */
+  top: 0;
+  width: 2.5rem; /* largura do ícone à esquerda */
+  height: 100%;
+  cursor: pointer;
+}
+
+#modal input#hour::-webkit-clear-button {
+  display: none;
+}
+
+#modal input#hour::-webkit-inner-spin-button,
+#modal input#hour::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Área do botão AGENDAR */
+#modal .btn {
+  margin: 0 1.25rem 2rem;
+  padding: 0;
+  display: flex;
+  justify-content: end;
+}
+
+#modal button#schedule-btn {
+  all: unset;
+  display: inline-flex;
+  text-transform: uppercase;
+  justify-content: center;
+  align-items: center;
+  font: var(--label-lg);
+  color: #050505;
+  background: var(--brand);
+  box-shadow: 0 0 20px 5px rgba(146, 130, 250, 0.3);
+  border-radius: 0.5rem;
+  width: 7.687rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+#modal button#schedule-btn:hover {
+  background: var(--bg-highlights);
+}
+
+/* Animação suave para abertura */
+#form-schedule:not(.none) {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-
-  & .modal-header {
-    display: flex;
-    padding: auto;
-    flex-direction: column;
-    align-items: start;
-    gap: 0.5rem;
-
-    & h2 {
-      font: var(--title);
-      color: var(--content-primary);
-      padding-inline: 1.25rem;
-    }
-
-    & p {
-      font: var(--pg-md);
-      color: var(--content-secondary);
-      padding-inline: 1.25rem;
-    }
-  }
-
-  & label {
-    font: var(--label-md);
-    color: var(--content-primary);
-    padding-inline: 1.25rem;
-    gap: 0.875rem;
-  }
-
-  & input {
-    all: unset;
-    font: var(--label-lg);
-    color: var(--content-secondary);
-    width: 80%;
-    margin-inline: auto;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-primary);
-    height: 2.5rem;
-    border-radius: 0.25rem;
-
-    &:hover {
-      border-color: var(--border-secondary);
-    }
-
-    &:focus {
-      border-color: var(--brand);
-      outline: none;
-    }
-  }
-
-  & input[id="tutor"] {
-    background-image: url(../../src/assets/User--Streamline.svg);
-    background-repeat: no-repeat;
-    background-position: 0.5rem center;
-    padding-left: 2.5rem;
-  }
-
-  & input[id="pet"] {
-    font: var(--pg-md);
-    color: var(--content-primary);
-    background-image: url(../../src/assets/Pet-Paw.svg);
-    background-repeat: no-repeat;
-    background-position: 0.5rem center;
-    padding-left: 2.5rem;
-  }
-
-  & input[id="phone"] {
-    font: var(--pg-md);
-    color: var(--content-primary);
-    background-image: url(../../src/assets/Phone.svg);
-    background-repeat: no-repeat;
-    background-position: 0.5rem center;
-    padding-left: 2.5rem;
-  }
-
-  & textarea {
-    all: unset;
-    font: var(--label-lg);
-    color: var(--content-secondary);
-    width: 85%;
-    margin-inline: auto;
-    margin-bottom: 1rem;
-    border: 1px solid var(--border-primary);
-    height: auto;
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-
-    &:hover {
-      border-color: var(--border-secondary);
-    }
-
-    &:focus {
-      border-color: var(--brand);
-      outline: none;
-    }
-  }
-
-  & input[type="date"] {
-    all: unset;
-    font: var(--label-lg);
-    width: 78%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    position: relative;
-    margin: auto;
-    border: 1px solid var(--border-primary);
-    padding: 0.5rem 0.5rem 0.5rem 2.5rem;
-    border-radius: 0.5rem;
-    color: var(--content-secondary);
-    margin-bottom: 1rem;
-
-    &::-webkit-calendar-picker-indicator {
-      opacity: 0;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    &::before {
-      content: "";
-      position: absolute;
-      background: url("../../src/assets/Calendar.svg") center/contain;
-      width: 1.25rem;
-      height: 1.25rem;
-      left: 0.5rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--content-secondary);
-      pointer-events: none;
-    }
-  }
-
-  & input[id="hour"] {
-    all: unset;
-    font: var(--label-lg);
-    width: 78%;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    position: relative;
-    margin: auto;
-    border: 1px solid var(--border-primary);
-    padding: 0.5rem 0.5rem 0.5rem 2.5rem;
-    border-radius: 0.5rem;
-    color: var(--content-secondary);
-    margin-bottom: 1rem;
-    background-image: url("../../src/assets/Clock-Circle.svg");
-    background-repeat: no-repeat;
-    background-position: 0.5rem center;
-    background-size: 1.25rem;
-
-    /* Remove controles específicos do Chrome/Safari */
-    &::-webkit-time-picker-indicator {
-      display: none;
-    }
-
-    &::-webkit-calendar-picker-indicator {
-      display: none;
-      opacity: 0;
-    }
-
-    /* Remove controles do Firefox */
-    &::-moz-time-picker {
-      display: none;
-    }
-
-    &::-webkit-inner-spin-button,
-    &::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-  }
-
-  & .btn {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    cursor: pointer;
-  }
-
-  & button[id="schedule-btn"] {
-    all: unset;
-    display: flex;
-    text-transform: uppercase;
-    justify-content: center;
-    align-items: center;
-    font: var(--label-lg);
-    color: #050505;
-    background: var(--brand);
-    box-shadow: 0 0 20px 5px rgba(146, 130, 250, 0.3);
-    border-radius: 0.5rem;
-    width: 7.687rem;
-    height: 3rem;
-
-    &:hover {
-      background: var(--bg-highlights);
-    }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
 @media (width >= 80em) {
   #modal {
     /* width: 30rem; */
-    max-width: 28rem;
-
-    & label {
-      padding-inline: 1.5rem;
-    }
-
-    & .modal-header {
-      & h2 {
-        padding-inline: 1.5rem;
-        font: bold 1.5rem/2rem var(--inter-tight);
-      }
-
-      & p {
-        font: var(--pg-md);
-        margin-bottom: 1rem;
-      }
-    }
+    max-width: 32rem; /* um pouco mais largo no desktop */
   }
+
+  #modal label {
+    padding-inline: 1.5rem;
+  }
+
+  #modal input,
+  #modal textarea,
+  #modal input[type="date"],
+  #modal input#hour {
+    margin-inline: 1.5rem;
+    width: calc(100% - 3rem);
+  }
+
+  #modal .modal-header h2 {
+    padding-inline: 1.5rem;
+    font: bold 1.5rem/2rem var(--inter-tight);
+  }
+
+  #modal .modal-header p {
+    font: var(--pg-md);
+    margin-bottom: 1rem;
+    padding-inline: 1.5rem;
+  }
+}
+
+/* Oculta o botão "Fechar" fora do modal (está fora do form no HTML) */
+#close-modal {
+  display: none;
 }

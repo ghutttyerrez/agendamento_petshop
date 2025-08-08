@@ -1,8 +1,17 @@
-import dayjs from "dayjs";
+import dayjs from "../../libs/day.js";
 import { cancelSchedule } from "../../services/schedule/cancel.js";
 
 export function createSchedule(schedule) {
-  console.log("Criando agendamento:", schedule);
+  // Validação inicial
+  if (!schedule) {
+    console.error("Schedule não fornecido");
+    return;
+  }
+
+  if (!schedule.dateTime) {
+    console.error("Schedule sem dateTime:", schedule);
+    return;
+  }
 
   // Extrai a hora do agendamento
   const hour = dayjs(schedule.dateTime).format("HH:mm");
@@ -18,16 +27,17 @@ export function createSchedule(schedule) {
     period = "night";
   }
 
-  console.log(`Agendamento para o período: ${period} às ${hour}`);
-
-  // CORREÇÃO: Seleciona o elemento específico do período por ID
+  // Seleciona o elemento específico do período por ID
   const periodElement = document.getElementById(period);
 
   if (!periodElement) {
     console.error(`Elemento com ID "${period}" não encontrado`);
-    console.log("Elementos disponíveis:", document.querySelectorAll('[id]'));
     return;
   }
+
+  // Usa o container correto (.content) dentro do período
+  const periodContainer =
+    periodElement.querySelector(".content") || periodElement;
 
   // Cria o elemento do agendamento
   const scheduleItem = document.createElement("ul");
@@ -37,24 +47,34 @@ export function createSchedule(schedule) {
   scheduleItem.innerHTML = `
     <li class="title">
       <span>${hour}</span>
-      <span>${schedule.pet}<small> / ${schedule.tutor}</small></span>
+      <span>${schedule.pet || "Pet não informado"}<small> / ${
+    schedule.tutor || "Tutor não informado"
+  }</small></span>
     </li>
-    <p>${schedule.service}</p>
-    <button class="remove-button" data-id="${schedule.id}">Remover agendamento</button>
+    <p>${schedule.service || "Serviço não informado"}</p>
+    <button id="remove-button" class="remove-button" data-id="${
+      schedule.id
+    }">Remover agendamento</button>
   `;
 
-  // CORREÇÃO: Adiciona o agendamento ao período correto
-  periodElement.appendChild(scheduleItem);
+  // Adiciona o agendamento ao período correto
+  periodContainer.appendChild(scheduleItem);
 
-  // CORREÇÃO: Corrige o evento de remoção
+  // Adiciona evento de remoção
   const removeButton = scheduleItem.querySelector(".remove-button");
-  removeButton.addEventListener("click", () => {
-    console.log("Removendo agendamento com id:", schedule.id);
-    scheduleItem.remove();
-    
-    // Chama a função de cancelamento na API
-    cancelSchedule(schedule.id);
-  });
-
-  console.log("Agendamento criado com sucesso:", scheduleItem);
+  if (removeButton) {
+    removeButton.addEventListener("click", async () => {
+      // Chama a API para remover do backend
+      try {
+        const ok = await cancelSchedule({ id: schedule.id });
+        if (ok) {
+          // Remove do DOM somente se a API confirmou
+          scheduleItem.remove();
+        } else {
+        }
+      } catch (e) {
+        console.error("Erro ao remover no servidor:", e);
+      }
+    });
+  }
 }

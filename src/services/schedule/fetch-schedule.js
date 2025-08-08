@@ -1,35 +1,46 @@
-import dayjs from "dayjs";
-import { apiConfig } from "../apiConfig.js";
-import { createSchedule } from "../../modules/form//create-schedule.js";
+import apiClient from "../../core/api/client.js";
+import dayjs from "../../libs/day.js";
+import { createSchedule } from "../../modules/form/create-schedule.js";
 
-export async function fetchSchedule(data) {
+export async function fetchSchedule({ date }) {
   try {
-    const response = await fetch(
-      `${apiConfig.baseURL}/schedules?date=${data.dateTime}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const schedules = await apiClient.get("/schedules");
 
-    const schedules = await response.json();
+    // Verifica se schedules é um array
+    if (!Array.isArray(schedules)) {
+      console.error("Resposta da API não é um array:", schedules);
+      return [];
+    }
 
-    const dailySchedules = schedules.filter((schedule) =>
-      dayjs(schedule.dateTime).isSame(dayjs(data.dateTime), "day")
-    );
+    const targetDay = dayjs(date);
+    const dailySchedules = schedules.filter((schedule) => {
+      if (!schedule) return false;
+      // Alguns registros podem ter 'date' e outros 'dateTime'
+      if (schedule.dateTime)
+        return dayjs(schedule.dateTime).isSame(targetDay, "day");
+      if (schedule.date) return dayjs(schedule.date).isSame(targetDay, "day");
+      return false;
+    });
 
-    document.getElementById("morning").innerHTML = "";
-    document.getElementById("afternoon").innerHTML = "";
-    document.getElementById("night").innerHTML = "";
+    // Limpa apenas as listas existentes dentro dos períodos para manter headers
+    ["morning", "afternoon", "night"].forEach((id) => {
+      const section = document.getElementById(id);
+      if (!section) return;
+      const content = section.querySelector(".content") || section;
+      content.querySelectorAll('ul[role="list"]').forEach((ul) => ul.remove());
+    });
 
+    // Cria os agendamentos
     dailySchedules.forEach((schedule) => {
-      createSchedule(schedule);
+      // Verifica novamente antes de criar
+      if (schedule && schedule.dateTime) {
+        createSchedule(schedule);
+      }
     });
 
     return dailySchedules;
   } catch (error) {
     console.error("Erro ao buscar agendamentos:", error);
+    return [];
   }
 }

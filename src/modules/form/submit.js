@@ -1,24 +1,96 @@
-import dayjs from "dayjs";
 import { sendSchedule } from "../../services/schedule/send-schedule.js";
+import { fetchSchedule } from "../../services/schedule/fetch-schedule.js";
+import dayjs from "../../libs/day.js";
 
-//captura os dados do formulario
-const form = document.querySelector("form");
+// Função para aguardar o DOM estar carregado
+function waitForElement(selector) {
+  return new Promise((resolve) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      resolve(element);
+      return;
+    }
 
-//capturando os elementos do formulario
-const inputDate = document.querySelectorAll("input[type='date']");
-const hour = document.getElementById("hour");
-const phone = document.getElementById("phone");
-const tutorName = document.getElementById("tutor");
-const petName = document.getElementById("pet");
-const serviceDescription = document.getElementById("service");
+    const observer = new MutationObserver(() => {
+      const element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
 
-//validando o input de time
-const hourNow = dayjs().format("HH:mm");
-hour.value = hourNow;
-hour.min = hourNow;
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  });
+}
 
-//funcao que transforma o input de hora em um array e captura o primeiro valor
+// Inicializar elementos do formulário quando disponíveis
+async function initializeFormElements() {
+  // Aguardar os elementos estarem disponíveis
+  const form = await waitForElement("form");
+  const hour = await waitForElement("#hour");
+  const phone = await waitForElement("#phone");
+
+  // Configurar hora atual
+  const hourNow = dayjs().format("HH:mm");
+  hour.value = hourNow;
+  hour.min = hourNow;
+
+  // Configurar inputs de data
+  const inputDate = document.querySelectorAll("input[type='date']");
+  inputDate.forEach((input) => {
+    const inputToday = dayjs().format("YYYY-MM-DD");
+    input.value = inputToday;
+    input.min = inputToday;
+
+    // Evento para mudança de data
+    input.addEventListener("change", () => {
+      const today = dayjs().startOf("day");
+      const selectedDate = dayjs(input.value);
+
+      if (selectedDate.isBefore(today)) {
+        hour.min = "00:00";
+      } else {
+        hour.min = hourNow;
+      }
+    });
+  });
+
+  // Validação de telefone
+  phone.addEventListener("input", () => {
+    let value = phone.value.replace(/\D/g, "");
+    value = value.slice(0, 11);
+
+    if (value.length <= 10) {
+      phone.value = value
+        .replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3")
+        .trim()
+        .replace(/[-\s]+$/, "");
+    } else {
+      phone.value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    }
+
+    const phonePattern = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+    if (!phonePattern.test(phone.value)) {
+      phone.setCustomValidity(
+        "Telefone inválido. Formato esperado: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX"
+      );
+    } else {
+      phone.setCustomValidity("");
+    }
+  });
+
+  // Adicionar evento de submit
+  form.addEventListener("submit", submitForm);
+}
+
+// Função para formatar hora
 const getHourInput = () => {
+  const hour = document.getElementById("hour");
+  if (!hour || !hour.value) return dayjs().format("HH:mm");
+
   const [hours, minutes] = hour.value.split(":");
   const formattedHour = `${String(hours).padStart(2, "0")}:${String(
     minutes
@@ -27,115 +99,80 @@ const getHourInput = () => {
   return formattedHour;
 };
 
-//manipula o input de data
-inputDate.forEach((input) => {
-  const inputToday = dayjs().format("YYYY-MM-DD");
-
-  input.value = inputToday;
-  input.min = inputToday;
-
-  //adiciona um evento para mudanca de data
-  input.onchange = () => {
-    const today = dayjs().startOf("day");
-    const selectedDate = dayjs(input.value);
-
-    //verifica se a data selecionada é anterior a hoje
-    if (selectedDate.isBefore(today)) {
-      hour.min = "00:00";
-    } else {
-      hour.min = hourNow;
-    }
-  };
-});
-
-//validando o input de telefone
-phone.addEventListener("input", () => {
-  // Remove tudo que não é número
-  let value = phone.value.replace(/\D/g, "");
-
-  // Limita para no máximo 11 números
-  value = value.slice(0, 11);
-
-  // Formatação dinâmica
-  if (value.length <= 10) {
-    // Telefone fixo (ou celular incompleto)
-    phone.value = value
-      .replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3")
-      .trim()
-      .replace(/[-\s]+$/, ""); // remove hífen/espaco se for parcial
-  } else {
-    // Celular com 9 dígitos
-    phone.value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-  }
-
-  //verifica se o telefone é válido
-  const phonePattern = /^\(\d{2}\) \d{4,5}-\d{4}$/;
-  if (!phonePattern.test(phone.value)) {
-    phone.setCustomValidity(
-      "Telefone inválido. Formato esperado: (XX) XXXX-XXXX ou (XX) XXXXX-XXXX"
-    );
-  } else {
-    phone.setCustomValidity("");
-  }
-});
-
-//adiciona um evento de submit ao formulario
-form.onsubmit = async (event) => {
+// Função principal de submit
+async function submitForm(event) {
   event.preventDefault();
 
   try {
-    //captura os dados do formulario
+    const form = event.target;
     const formData = new FormData(form);
+
+    // Cria um objeto com os dados do formulário
     const data = {
       tutor: formData.get("tutor"),
       pet: formData.get("pet"),
       phone: formData.get("phone"),
       service: formData.get("service"),
+      date: formData.get("date"),
+      hour: getHourInput(),
     };
 
-    //adiciona hora ao objeto data
-    data.hour = getHourInput();
-
-    //valida os campos name e pet
-    if (!tutorName.value || !petName.value) {
+    // Validações
+    if (!data.tutor || !data.pet) {
       alert("Por favor, preencha o nome do tutor e do pet.");
       return;
     }
 
-    //valida o campo servicos
-    if (!serviceDescription.value) {
+    if (!data.service) {
       alert("Por favor, descreva o serviço a ser realizado.");
       return;
     }
 
-    //valida o campo telefone
-    if (!phone.value) {
+    if (!data.phone) {
       alert("Por favor, preencha o telefone.");
       return;
     }
 
-    //gera um id unico para a api de agendamento
+    if (!data.date || !data.hour) {
+      alert("Por favor, preencha a data e hora do agendamento.");
+      return;
+    }
+
+    // Gerar ID único
     data.id = crypto.randomUUID();
 
-    //gerando uma data e hora para enviar para a API
+    // Criar dateTime
     const dateTime = dayjs(
-      `${inputDate[0].value} ${data.hour}`,
+      `${data.date} ${data.hour}`,
       "YYYY-MM-DD HH:mm"
     ).toISOString();
 
-    //adiciona a data e hora ao objeto data
     data.dateTime = dateTime;
 
+    // Enviar agendamento
     await sendSchedule(data);
 
-    //reseta o formulario
-    form.reset();
+    // Fechar modal
+    if (window.closeModal) {
+      window.closeModal();
+    }
 
-    console.log("Dados do formulário:", data);
+    // Recarregar agendamentos
+    const currentDate =
+      document.querySelector('.header input[type="date"]')?.value ||
+      dayjs().format("YYYY-MM-DD");
+    await fetchSchedule({ date: currentDate });
+
+    alert("Agendamento criado com sucesso!");
   } catch (error) {
-    console.log(error);
+    console.error("Erro ao enviar o formulário:", error);
     alert(
       "Ocorreu um erro ao enviar o formulário. Por favor, tente novamente."
     );
   }
-};
+}
+
+// Inicializar quando o DOM estiver carregado
+document.addEventListener("DOMContentLoaded", initializeFormElements);
+
+export { submitForm };
