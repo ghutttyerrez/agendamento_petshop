@@ -4,7 +4,7 @@ Aplicação front-end para agendamento de serviços em petshops. Este projeto co
 
 ## 🔍 Preview
 
-- Live: https://agendamento-petshop-chi.vercel.app
+- Live: https://agendamento-petshop-chi.vercel.app/
 - Screenshot:
 
 <p align="center">
@@ -23,6 +23,7 @@ Aplicação front-end para agendamento de serviços em petshops. Este projeto co
 
 ## 🛠️ Tecnologias
 
+- Vercel (deploy/hosting e preview)
 - Vite (dev server e build com Rollup)
 - Vanilla JS (ESM)
 - CSS puro
